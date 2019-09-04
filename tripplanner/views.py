@@ -20,7 +20,6 @@ def new(request):
 		BasicForm = SetTravellerInfoBasic(request.POST)
 		if BasicForm.is_valid():
 			BformInput = BasicForm.clean()
-			print (BformInput)
 			if BformInput["Travel_Dates"] == 'True':
 				response = redirect('/NonFlex/')
 				return response
@@ -50,14 +49,12 @@ def NFlexyTravel(request):
 		NonFlex = NonFlexTravel(request.POST)
 		if NonFlex.is_valid():
 			FformInput = NonFlex.clean()
-			print (BformInput)
-			print (FformInput)
 
 			POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
 						FformInput['Hotel_Postal'],
-						FformInput['Arrival_Date'].strip() ,
-						FformInput['Departure_Date'].strip() ,
+						FformInput['Arrival_Date'].strftime('%Y-%m-%d') ,
+						FformInput['Departure_Date'].strftime('%Y-%m-%d') ,
 						True, 
 						BformInput["How_Are_You_Travelling"], 
 						'', 
@@ -65,14 +62,22 @@ def NFlexyTravel(request):
 						FformInput['Meal_Preferences'], 
 						BformInput['Interest'] )
 
-
-			response = redirect('/recommendations/')
+			api_response = getjson(url)
+			caseid = api_response["id"]
+			response = redirect('/travelPlans/'+caseid+'/recommendations/')
+			req = {}
 			return response
 
-	args = { 	
-				'Form' 	: NonFlexTravel(),
-				'title' : "Travelling Preferences!"
-			}
+
+
+	else :
+		args = { 	
+					'Form' 	: NonFlexTravel(),
+					'title' : "Travelling Preferences!"
+				}
+		
+
+
 
 	return render(request, 'new.html',args)
 
@@ -105,16 +110,20 @@ def FlexyTravel(request):
 						FformInput['Meal_Preferences'], 
 						BformInput['Interest'] )
 
-
-
-			response = redirect('/recommendations/')
+			api_response = getjson(url)
+			caseid = api_response["id"]
+			response = redirect('/travelPlans/'+caseid+'/recommendations/')
+			req = {}
 			return response
 
-	else:
+
+	else :
+
 		args = { 	
 					'Form' 	:  FlexTravel(),
 					'title' : "Travelling Preferences!"
 				}
+
 
 	return render(request, 'new.html',args)
 
@@ -145,4 +154,11 @@ def POSTData(name, email, hotelLocation, travelDate, travelEndDate, flexibleTime
 	BformInput = {}
 	FformInput = {}
 
+
 	return resp.json()
+
+
+
+def getjson(url):
+    resp = requests.get(url)
+    return resp.json()
