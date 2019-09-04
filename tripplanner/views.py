@@ -50,7 +50,7 @@ def NFlexyTravel(request):
 		if NonFlex.is_valid():
 			FformInput = NonFlex.clean()
 
-			POSTData (	BformInput['Your_Name'],
+			resp = POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
 						FformInput['Hotel_Postal'],
 						FformInput['Arrival_Date'].strftime('%Y-%m-%d') ,
@@ -61,11 +61,11 @@ def NFlexyTravel(request):
 						FformInput["Max_Hours_Per_Day"],
 						FformInput['Meal_Preferences'], 
 						BformInput['Interest'] )
-
-			api_response = getjson(url)
-			caseid = api_response["id"]
-			response = redirect('/travelPlans/'+caseid+'/recommendations/')
-			req = {}
+			print (resp)
+			caseid = resp[0]["id"]
+			print (caseid)
+			response = redirect('/travelPlans/'+str(caseid)+'/recommendations')
+			#req = {}
 			return response
 
 
@@ -98,7 +98,7 @@ def FlexyTravel(request):
 		Flex = FlexTravel(request.POST)
 		if Flex.is_valid():
 			FformInput = Flex.clean()
-			POSTData (	BformInput['Your_Name'],
+			resp = POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
 						FformInput['Hotel_Postal'],
 						'' ,
@@ -110,10 +110,11 @@ def FlexyTravel(request):
 						FformInput['Meal_Preferences'], 
 						BformInput['Interest'] )
 
-			api_response = getjson(url)
-			caseid = api_response["id"]
-			response = redirect('/travelPlans/'+caseid+'/recommendations/')
-			req = {}
+			print (resp)
+			caseid = resp[0]["id"]
+			print (caseid)
+			response = redirect('/travelPlans/'+str(caseid)+'/recommendations')
+			#req = {}
 			return response
 
 
@@ -150,15 +151,9 @@ def POSTData(name, email, hotelLocation, travelDate, travelEndDate, flexibleTime
 			}
 	
 	resp = requests.post(TRIPPINGO_URL+"travelPlans",json=data)
-	print (resp.text)
+	#print (resp.text)
 	BformInput = {}
 	FformInput = {}
 
 
-	return resp.json()
-
-
-
-def getjson(url):
-    resp = requests.get(url)
-    return resp.json()
+	return  resp.json(),
