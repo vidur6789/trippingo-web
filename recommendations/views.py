@@ -9,6 +9,7 @@ from recommendations.models import Recommendation
 TRIPPINGO_URL="http://localhost:8001"
 APIKEY = 'AIzaSyAgU9a5eTrwZP9pIb0eNuNRu3iPE75tR-8'
 
+
 def recommendations(request):
 
 	print("Entered recommendations")
@@ -38,7 +39,12 @@ def selectedAttractions(request,pk):
 	selected_attractions = [int(key) for key, value in request.POST.dict().items() if value == 'on']
 	print(selected_attractions)
 	saveSelectedAttractions(1, selected_attractions)
-	return redirect('../{pk}/itinerary'.format(pk=pk))
+	return redirect('../{pk}/planning'.format(pk=pk))
+
+def planning(request, pk):
+	print("Entered planning")
+	return render(request, 'planning.html', {"pk":pk})
+
 
 def itinerary(request,pk):
 	print("Entered itinerary")
