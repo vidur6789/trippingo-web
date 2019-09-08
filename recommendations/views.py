@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import requests
+from django.http import JsonResponse
 from recommendations.models import Recommendation
 
 # Create your views here.
@@ -10,7 +11,7 @@ APIKEY = 'AIzaSyAgU9a5eTrwZP9pIb0eNuNRu3iPE75tR-8'
 
 def recommendations(request):
 
-	print("I was here")
+	print("Entered recommendations")
 	recs=trippingoRecommendations(request)
 	context = {
 		"recs":recs,
@@ -21,6 +22,7 @@ def recommendations(request):
 
 
 def recommendations_pk(request, pk):
+	print("Entered recommendations_pk")
 	recs=trippingoRecommendations(request)
 	context = {
 		"recs":recs,
@@ -40,8 +42,8 @@ def selectedAttractions(request,pk):
 
 def itinerary(request,pk):
 	print("Entered itinerary")
-	# print(request.POST.dict())
-	return recommendations(request)
+	itinerary_resp = plan_itinerary(pk)
+	return JsonResponse(dict(itinerary_resp.json()))
 
 
 def trippingoRecommendations(req):
@@ -62,6 +64,14 @@ def saveSelectedAttractions(travel_plan_id, selected_attractions):
 	print(data)
 	resp = requests.put(url, json=data)
 	print(resp.text)
+
+
+def plan_itinerary(travel_plan_id):
+	url = TRIPPINGO_URL + "/travelPlans/{id}/itinerary".format(id=travel_plan_id);
+	print(url)
+	data = {}
+	resp = requests.put(url, json=data)
+	return resp
 
 
 def mapToModel(rec):
