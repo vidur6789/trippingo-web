@@ -49,6 +49,7 @@ def NFlexyTravel(request):
 		NonFlex = NonFlexTravel(request.POST)
 		if NonFlex.is_valid():
 			FformInput = NonFlex.clean()
+			Days = FformInput['Departure_Date'] - FformInput['Arrival_Date']
 
 			resp = POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
@@ -57,7 +58,7 @@ def NFlexyTravel(request):
 						FformInput['Departure_Date'].strftime('%Y-%m-%d') ,
 						True, 
 						BformInput["How_Are_You_Travelling"], 
-						'', 
+						Days.days,
 						FformInput["Max_Hours_Per_Day"],
 						"LongMeal", 
 						BformInput['Interest'] )
@@ -65,7 +66,6 @@ def NFlexyTravel(request):
 			caseid = resp[0]["id"]
 			print (caseid)
 			response = redirect('/travelPlans/'+str(caseid)+'/recommendations')
-			#req = {}
 			return response
 
 
@@ -114,7 +114,6 @@ def FlexyTravel(request):
 			caseid = resp[0]["id"]
 			print (caseid)
 			response = redirect('/travelPlans/'+str(caseid)+'/recommendations')
-			#req = {}
 			return response
 
 
@@ -151,7 +150,6 @@ def POSTData(name, email, hotelLocation, travelDate, travelEndDate, flexibleTime
 			}
 	
 	resp = requests.post(TRIPPINGO_URL+"travelPlans",json=data)
-	#print (resp.text)
 	BformInput = {}
 	FformInput = {}
 
