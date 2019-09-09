@@ -26,10 +26,10 @@ Travel_Dates_C=	[
 						]
 
 
-Meal_Preference_C	= 	[
-						('LongMeal'		,	'Long Meal'),
-						('ShortMeal'	,	'Short Meal')
-						]
+# Meal_Preference_C	= 	[
+# 						('LongMeal'		,	'Long Meal'),
+# 						('ShortMeal'	,	'Short Meal')
+# 						]
 
 
 
@@ -103,16 +103,16 @@ class FlexTravel (forms.Form):
 											'placeholder' 	: '8'
 											})
 										)
-	Meal_Preferences = forms.ChoiceField	(
-											choices = Meal_Preference_C,
-											required= True,
-											widget 	= forms.Select(
-											attrs 	= {
-											'select class'		: 'custom-select my-1 mr-sm-2',
-											#'type' 			: 'checkbox',
-											}			
-											)
-										)
+	# Meal_Preferences = forms.ChoiceField	(
+	# 										choices = Meal_Preference_C,
+	# 										required= True,
+	# 										widget 	= forms.Select(
+	# 										attrs 	= {
+	# 										'select class'		: 'custom-select my-1 mr-sm-2',
+	# 										#'type' 			: 'checkbox',
+	# 										}			
+	# 										)
+	# 									)
 
 										
 	Hotel_Postal = forms.IntegerField	(	
@@ -160,16 +160,16 @@ class NonFlexTravel (forms.Form):
 											'placeholder' 	: '8'
 											})
 										)
-	Meal_Preferences = forms.ChoiceField	(
-											choices = Meal_Preference_C,
-											required= True,
-											widget 	= forms.Select(
-											attrs 	= {
-											'select class'			: 'custom-select my-1 mr-sm-2',
-											#'type' 			: 'checkbox',
-											}			
-											)
-										)
+	# Meal_Preferences = forms.ChoiceField	(
+	# 										choices = Meal_Preference_C,
+	# 										required= True,
+	# 										widget 	= forms.Select(
+	# 										attrs 	= {
+	# 										'select class'			: 'custom-select my-1 mr-sm-2',
+	# 										#'type' 			: 'checkbox',
+	# 										}			
+	# 										)
+										# )
 	Hotel_Postal = forms.IntegerField	(	
 											widget 	= forms.TextInput(
 											attrs 	= {

@@ -59,7 +59,7 @@ def NFlexyTravel(request):
 						BformInput["How_Are_You_Travelling"], 
 						'', 
 						FformInput["Max_Hours_Per_Day"],
-						FformInput['Meal_Preferences'], 
+						"LongMeal", 
 						BformInput['Interest'] )
 			print (resp)
 			caseid = resp[0]["id"]
@@ -107,7 +107,7 @@ def FlexyTravel(request):
 						BformInput["How_Are_You_Travelling"], 
 						FformInput["Travel_Duration"], 
 						FformInput["Max_Hours_Per_Day"],
-						FformInput['Meal_Preferences'], 
+						"LongMeal", 
 						BformInput['Interest'] )
 
 			print (resp)
