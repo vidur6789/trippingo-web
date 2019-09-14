@@ -77,6 +77,7 @@ def plan_itinerary(travel_plan_id):
 	print(url)
 	data = {}
 	resp = requests.put(url, json=data)
+	print(data)
 	return resp
 
 
@@ -98,3 +99,14 @@ def getPhoto(attrname):
  	photo_ref = info['candidates'][0]['photos'][0]['photo_reference']
  	photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={APIKEY}".format(photo_ref=photo_ref, APIKEY=APIKEY)
  	return photo_url
+
+def associatedAttractions(request):
+
+	print("Entered associatedAttractions")
+	recs=trippingoRecommendations(request)
+	context = {
+		"recs":recs,
+		"selectedRecs":[rec for rec in recs if rec.selected],
+		"pk":"123"
+	}
+	return render(request, 'recommendations.html', context)
