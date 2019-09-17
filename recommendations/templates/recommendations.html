@@ -1,4 +1,4 @@
-<style>
+<style xmlns="http://www.w3.org/1999/html">
     .card-item {
         background-color: pink;
         display: table-cell;
@@ -15,9 +15,9 @@
 <h1 class="text-center">ATTRACTION RECOMMENDATION</h1>
 
 <h6 class="text-center">Based on your infomation, we recommend these attractions to you:</h6>
-<form action="../{{pk}}/selectedAttractions" method='POST'>
+<br action="../{{pk}}/selectedAttractions" method='POST'>
     {% csrf_token %}
-<div class="container">
+<br class="container">
   <div class="row">
     <div class="col-12 col-sm-8 col-lg-9">
       <ul class="list-group" id="recommendation_list">
@@ -44,23 +44,21 @@
 </ul>
     </div>
   </div>
+</br>
 <HR SIZE=100 width=75% align=left>
 <h6 class="text-center">You may also be interested in:</h6>
-<form action="../{{pk}}/associatedAttractions" method='POST'>
+<form>
     <div class="container">
             <div class="row">
                 <div class="col-12 col-sm-8 col-lg-9" id="recommendation_list_interest">
-                 {% for rec in recs %}
+                 {% for arec in associatedRecs%}
                     <div class="card-item" >
                     <div class="card" style="width: 16.5rem;">
-                          <img class="card-img-top" src="{{rec.img_url}}" alt="Card image cap">
-                          <div class="card-body">
-                            <input class="form-check-input" type="checkbox"{% if rec.selected %} checked {% endif %}
-                                     name="{{rec.attraction_id}}" onclick="handleUpdate(true)">
-                            <h5 class="card-title">{{ rec.name }}</h5>
-{#                            <a href="#" class="btn btn-primary" onclick="update_list_interest(this)">Go somewhere#}
-
-                            </a>
+                          <img class="card-img-top" src="{{arec.img_url}}" alt="Card image cap">
+                          <div class="card-body" id="association_list">
+                            <input class="form-check-input" type="checkbox"{% if arec.0.selected %} checked {% endif %}
+                                     name="{{arec.attraction_id}}" onclick="handleUpdate()">
+                                <h5 class="card-title">{{ arec.name }}</h5>
                           </div>
                         </div>
                     </div>
@@ -70,43 +68,53 @@
     </div>
 
 </form>
-
-<button type="submit" class="save btn btn-default">Next></button>
+<br />
+<br />
+<button type="submit" class="save btn btn-default" style="display:block;margin:0 auto">Next></button>
 
 </div>
 </form>
-<script>
-debugger
-    pk = {{ pk }}
 
+
+
+<script>
+    pk = {{ pk }}
+        {% autoescape off %}
+            associationDict = {{ associationDict}}
+        {% endautoescape %}
     console.log('Executing script')
+    console.log(associationDict)
     function handleUpdate(el){
         clear_element()
         update_list()
+        if(el)update_association_list()
         update_list_interest()
-        if(el)postList()
-    }
-    function postList() {
-        debugger
-          htmlobj=$.ajax({url:`../{{ pk }}/associatedAttractions`,async:false});
+
 
     }
+
     function update_list() {
         console.log('update_list');
         rec_list = document.getElementById("recommendation_list")
 
         var children = rec_list.children;
+        var checked_list = []
+
         for (var i = 0; i < children.length; i++) {
             var list_item = children[i];
-            if(list_item.children[0].checked == true){
+
+            if (list_item.children[0].checked == true) {
+                checked_list.push(list_item.children[2].innerHTML)
                 var li = document.createElement("li");
                 var attraction_name = list_item.children[2].innerHTML
                 console.log(attraction_name)
-                li.innerHTML = '<li class="list-group-item">' +attraction_name +'</li>';
+                li.innerHTML = '<li class="list-group-item">' + attraction_name + '</li>';
                 attraction_list.appendChild(li);
             }
         }
     }
+
+
     function update_list_interest() {
 
         let inputList = $("#recommendation_list_interest input")
@@ -127,7 +135,9 @@ debugger
         while(attraction_list.firstChild){
             attraction_list.removeChild(attraction_list.firstChild);
         }
+
     }
+
 
   </script>
 {% endblock %}
