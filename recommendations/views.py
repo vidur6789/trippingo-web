@@ -34,16 +34,16 @@ def recommendations_pk(request, pk):
 		"associatedRecs":association_recs,
 		"pk":pk
 	}
-	print(context['selectedRecs'])
+	#print(context['selectedRecs'])
 	return render(request, 'recommendations.html', context)
 
 
 def selectedAttractions(request,pk):
 
 	print("----------Entered selectedAttractions")
-	print(request)
+	#print(request)
 	selected_attractions = [int(key) for key, value in request.POST.dict().items() if value == 'on']
-	print(selected_attractions)
+	#print(selected_attractions)
 	saveSelectedAttractions(1, selected_attractions)
 	return redirect('../{pk}/planning'.format(pk=pk))
 
@@ -102,7 +102,7 @@ def itinerary(request,pk):
 				map_label[i] = map_label[i]+str(q)
 				allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
 			map_label[i] = map_label[i]+"1"
-			print(map_label[i])
+			#print(map_label[i])
 		else:
 			allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
 			direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
@@ -114,7 +114,7 @@ def itinerary(request,pk):
 			for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
 				map_label[i] = map_label[i]+str(j+1)
 				allName[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
-			print(map_label[i])
+			#print(map_label[i])
 
 		for j in range(len(allName)):  # for j in numverofAttracttions per day
 			if hotel=='' and j == 0:
@@ -146,11 +146,11 @@ def itinerary(request,pk):
 		attrLngList[i] = attrLng
 		centerGeometry[i] = [lat_sum / len(allName),
 							 lng_sum / len(allName)]
-		print(centerGeometry[i])
+		#print(centerGeometry[i])
 		timeofDays[i] = timeperDay
 		direct[i] = direct_url
 
-	print(str_list[0])
+	#print(str_list[0])
 	context = {
 		"dayPlans": itinerary["dayPlans"],
 		"pk": pk,
@@ -204,22 +204,22 @@ def associationRecommendations(req,pk):
 		association_api_response = getjson(association_url)
 		if len(association_api_response) != 0:
 			for a in association_api_response:
-				print(a)
+				#print(a)
 				if a["name"] not in rec_list and mapToModel(a) not in association_recs:
 					association_recs.append(mapToModel(a))
 					# break
-	print('association_recs',association_recs)
+	#print('association_recs',association_recs)
 	return recommendations, association_recs
 
 
 
 def saveSelectedAttractions(travel_plan_id, selected_attractions):
 	url = TRIPPINGO_URL + "/travelPlans/{id}/selectedAttractions".format(id=travel_plan_id);
-	print(url)
+	#print(url)
 	data = {"attractionIds":selected_attractions}
-	print(data)
+	#print(data)
 	resp = requests.put(url, json=data)
-	print(resp.text)
+	#print(resp.text)
 
 
 def plan_itinerary(travel_plan_id):
@@ -227,7 +227,7 @@ def plan_itinerary(travel_plan_id):
 	print(url)
 	data = {}
 	resp = requests.put(url, json=data)
-	print(data)
+	#print(data)
 	return resp
 
 
@@ -244,9 +244,12 @@ def getjson(url):
 
 
 def getPhoto(attrname):
-	API_ENDPOINT = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={attrname}&inputtype=textquery&fields=photos&key={APIKEY}".format(attrname=attrname, APIKEY=APIKEY)
-	info = getjson(API_ENDPOINT)
-	photo_ref = info['candidates'][0]['photos'][0]['photo_reference']
-	photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={APIKEY}".format(photo_ref=photo_ref, APIKEY=APIKEY)
+	try:
+		API_ENDPOINT = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={attrname}&inputtype=textquery&fields=photos&key={APIKEY}".format(attrname=attrname, APIKEY=APIKEY)
+		info = getjson(API_ENDPOINT)
+		photo_ref = info['candidates'][0]['photos'][0]['photo_reference']
+		photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={APIKEY}".format(photo_ref=photo_ref, APIKEY=APIKEY)
+	except Exception as e:
+		return getPhoto('Singapore Flyer')
 	return photo_url
 
