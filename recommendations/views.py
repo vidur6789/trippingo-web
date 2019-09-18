@@ -24,7 +24,7 @@ def recommendations(request):
 
 def recommendations_pk(request, pk):
 	print("Entered recommendations_pk")
-	recs=trippingoRecommendations(request)
+	recs=trippingoRecommendations(request, pk)
 	context = {
 		"recs":recs,
 		"selectedRecs":[rec for rec in recs if rec.selected],
@@ -55,8 +55,7 @@ def itinerary(request,pk):
 def trippingoRecommendations(req):
 	keywords = 'Landmark'
 	travellerType = 'Family'
-	url = TRIPPINGO_URL + "/recommendations?keywords={keywords}&travellerType={travellerType}&count=3".format(
-	    keywords=keywords, travellerType=travellerType);
+	url = TRIPPINGO_URL + "/{id}/recommendations?count=10".format(id=pk);
 	print(url)
 	api_response = getjson(url)
 	recommendations = [mapToModel(rec) for rec in api_response]
