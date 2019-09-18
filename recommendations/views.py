@@ -44,7 +44,7 @@ def selectedAttractions(request,pk):
 	#print(request)
 	selected_attractions = [int(key) for key, value in request.POST.dict().items() if value == 'on']
 	#print(selected_attractions)
-	saveSelectedAttractions(1, selected_attractions)
+	saveSelectedAttractions(pk, selected_attractions)
 	return redirect('../{pk}/planning'.format(pk=pk))
 
 def planning(request, pk):
