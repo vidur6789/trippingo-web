@@ -148,10 +148,11 @@ def POSTData(name, email, hotelLocation, travelDate, travelEndDate, flexibleTime
 										"categories"		: categories
 										}
 			}
-	
+	print (data)
 	resp = requests.post(TRIPPINGO_URL+"travelPlans",json=data)
 	BformInput = {}
 	FformInput = {}
+
 
 
 	return  resp.json(),

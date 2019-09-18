@@ -135,7 +135,7 @@ class FlexTravel (forms.Form):
 	# 									)
 
 										
-	Hotel_Name = forms.CharField	(	
+	Hotel_Name = forms.CharField	(		required=False,
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
@@ -190,7 +190,7 @@ class NonFlexTravel (forms.Form):
 	# 										}			
 	# 										)
 										# )
-	Hotel_Name = forms.CharField	(	
+	Hotel_Name = forms.CharField	(		required=False,
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
