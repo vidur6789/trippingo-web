@@ -11,7 +11,8 @@ FformInput = {}
 
 # Create your views here.
 def landing(request):
-	return render(request,'home.html',{'title' : "SG Travel Planner"} )
+	# return render(request,'home.html',{'title' : "SG Travel Planner"} )
+	return render(request, 'home.html', {'title': "SG Travel Planner"})
 
 def new(request):
 	global BformInput

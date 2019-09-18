@@ -53,174 +53,117 @@ def planning(request, pk):
 
 
 def itinerary(request,pk):
-	print("Entered itinerary")
-	itinerary_resp = plan_itinerary(pk)
-	itinerary = dict(itinerary_resp.json())
-	# itinerary = {
-	# 	"itineraryId": 3203,
-	# 	"dayPlans": [
-	# 		{"id": 3205, "travelDate": "2019-09-23", "serialNo": 1,
-	# 		 "attractionVisit": [
-	# 			 {
-	# 				 "serialNo": 200,
-	# 				 "timeofDay": "17:15:00",
-	# 				 "attraction": {
-	# 					 "id": 7,
-	# 					 "name": "Singapore Flyer",
-	# 					 "description": "At 165 metres tall, Singapore Flyer is a masterpiece of urban architecture and engineering that showcases not only the mesmerizing cosmopolitan cityscape of the tropical Lion City, but even the surrounding islands of Indonesia and parts of Malaysia in all their glory. In addition to offering panoramic views of Singapore's cosmopolitan cityscape, guests can also indulge in a flute of champagne, or savour the iconic Singapore Sling whilst hosted in a special themed capsule. Diners seeking both privacy and luxury can opt for a multi-sensory treat unlike any other with our Premium Sky Dining Flight, complete with a four-course dinner and an in-flight host.",
-	# 					 "categories": ["Landmark"], "openingTime": "08:30:00", "closingTime": "22:00:00",
-	# 					 "recommendedDuration": {"from": 2.0, "to": 3.0},
-	# 					 "price": 22, "postalCode": "039803", "keywords": "", "reviews": [],
-	# 					 "attractionRank": {"familyRank": 4, "coupleRank": 6, "friendsRank": 8, "businessRank": 72,
-	# 										"soloRank": 6},
-	# 					 "isOutdoor": 1, "promotions": 22, "openingTimeGrains": 34, "closingTimeGrains": 88,
-	# 					 "durationTimeGrains": 10, "maxDurationTimeGrains": 12,
-	# 					 "minDurationTimeGrains": 8}
-	# 			 },
-	# 			 {
-	# 				 "serialNo": 200,
-	# 				 "timeofDay": "18:15:00",
-	# 				 "attraction": {
-	# 					 "id": 7,
-	# 					 "name": "Gardens by the Bay",
-	# 					 "description": "At 165 metres tall, Singapore Flyer is a masterpiece of urban architecture and engineering that showcases not only the mesmerizing cosmopolitan cityscape of the tropical Lion City, but even the surrounding islands of Indonesia and parts of Malaysia in all their glory. In addition to offering panoramic views of Singapore's cosmopolitan cityscape, guests can also indulge in a flute of champagne, or savour the iconic Singapore Sling whilst hosted in a special themed capsule. Diners seeking both privacy and luxury can opt for a multi-sensory treat unlike any other with our Premium Sky Dining Flight, complete with a four-course dinner and an in-flight host.",
-	# 					 "categories": ["Landmark"], "openingTime": "08:30:00", "closingTime": "22:00:00",
-	# 					 "recommendedDuration": {"from": 2.0, "to": 3.0},
-	# 					 "price": 22, "postalCode": "039803", "keywords": "", "reviews": [],
-	# 					 "attractionRank": {"familyRank": 4, "coupleRank": 6, "friendsRank": 8, "businessRank": 72,
-	# 										"soloRank": 6},
-	# 					 "isOutdoor": 1, "promotions": 22, "openingTimeGrains": 34, "closingTimeGrains": 88,
-	# 					 "durationTimeGrains": 10, "maxDurationTimeGrains": 12,
-	# 					 "minDurationTimeGrains": 8}
-	# 			 }
-	# 		 ]},
 
-	# 		{"id": 3204, "travelDate": "2019-09-24", "serialNo": 2, "attractionVisit": [
-	# 			{"serialNo": 300, "timeofDay": "09:30:00", "attraction": {"id": 1, "name": "Singapore Zoo",
-	# 																	  "description": "An integral part of Singapore's \"City in a Garden\" vision, Gardens by the Bay spans a total of 101 hectares of prime land at the heart of Singapore's new downtown - Marina Bay. Comprising three waterfront gardens - Bay South, Bay East and Bay Central - Gardens by the Bay will be a showcase of horticulture and garden artistry that will bring the world of plants to Singapore and present Singapore to the World.",
-	# 																	  "categories": ["NaturePark", "Landmark"],
-	# 																	  "openingTime": "05:00:00",
-	# 																	  "closingTime": "02:00:00",
-	# 																	  "recommendedDuration": {"from": 3.0,
-	# 																							  "to": -1.0},
-	# 																	  "price": 2222, "postalCode": "018953",
-	# 																	  "keywords": "", "reviews": [],
-	# 																	  "attractionRank": {"familyRank": 1,
-	# 																						 "coupleRank": 1,
-	# 																						 "friendsRank": 1,
-	# 																						 "businessRank": 1,
-	# 																						 "soloRank": 1},
-	# 																	  "isOutdoor": 2, "promotions": 2,
-	# 																	  "openingTimeGrains": 20,
-	# 																	  "closingTimeGrains": 8,
-	# 																	  "durationTimeGrains": 8,
-	# 																	  "maxDurationTimeGrains": 4,
-	# 																	  "minDurationTimeGrains": 12}}]}
-	# 	]
-	# }
-	for dayp in itinerary["dayPlans"]:
-		for j in dayp["attractionVisit"]:
-			daytime = time.strptime(j["timeofDay"], "%H:%M:%S")
-			j["timeofDay"] = str(daytime.tm_hour)+":"+str(daytime.tm_min)
+    print("Entered itinerary")
+    itinerary_resp = plan_itinerary(pk)
+    itinerary = dict(itinerary_resp.json())
+    for dayp in itinerary["dayPlans"]:
+        for j in dayp["attractionVisit"]:
+            daytime = time.strptime(j["timeofDay"], "%H:%M:%S")
+            j["timeofDay"] = str(daytime.tm_hour)+":"+str(daytime.tm_min)
 
-	attrName = ''
-	hotel = ''
-	#url = TRIPPINGO_URL + "/travelPlans/{pk}".format(pk)
-	map_label= ["" for _ in range(len(itinerary['dayPlans']))]
-	API_KEY = 'AIzaSyCZ4Q24NuUFkO3sQBdtcwNxSnO3qwZqwW8'
+    plan_url = TRIPPINGO_URL + "/travelPlans/{id}".format(id=pk)
+    plan_info = getjson(plan_url)
+    hotel = plan_info["hotelLocation"]
+    #url = TRIPPINGO_URL + "/travelPlans/{pk}".format(pk)
+    map_label= ["" for _ in range(len(itinerary['dayPlans']))]
+    API_KEY = 'AIzaSyCZ4Q24NuUFkO3sQBdtcwNxSnO3qwZqwW8'
 
-	attrList = [0 for _ in range(len(itinerary['dayPlans']))]
+    attrList = [0 for _ in range(len(itinerary['dayPlans']))]
 
-	travelPlanCoordinates = [0 for _ in range(len(itinerary['dayPlans']))]  # travelPlanCoordinates list with geometry of attractions(the jth attraction of i day)
-	centerGeometry = [0 for _ in range(len(itinerary['dayPlans']))]  # #record average Geometry (centre point) of each day
-	timeofDays = [0 for _ in range(len(itinerary['dayPlans']))]  ##record visit time of all attractions
-	direct = [0 for _ in range(len(itinerary['dayPlans']))]
-	attrLatList = [0 for _ in range(len(itinerary['dayPlans']))]
-	attrLngList = [0 for _ in range(len(itinerary['dayPlans']))]
-	q = 0
+    travelPlanCoordinates = [0 for _ in range(len(itinerary['dayPlans']))]  # travelPlanCoordinates list with geometry of attractions(the jth attraction of i day)
+    centerGeometry = [0 for _ in range(len(itinerary['dayPlans']))]  # #record average Geometry (centre point) of each day
+    timeofDays = [0 for _ in range(len(itinerary['dayPlans']))]  ##record visit time of all attractions
+    direct = [0 for _ in range(len(itinerary['dayPlans']))]
+    attrLatList = [0 for _ in range(len(itinerary['dayPlans']))]
+    attrLngList = [0 for _ in range(len(itinerary['dayPlans']))]
+    q = 0
 
-	for i in range(len(itinerary['dayPlans'])):  # for i in numverofDays
-		lat_sum = 0  # record the sum of attractions latitude per day
-		lng_sum = 0  # record the sum of attractions lagnitude per day
-		q = i+1
+    for i in range(len(itinerary['dayPlans'])):  # for i in numverofDays
+        lat_sum = 0  # record the sum of attractions latitude per day
+        lng_sum = 0  # record the sum of attractions lagnitude per day
+        q = i+1
 
-		if hotel:
-			allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
-			direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
-			direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
-			attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]  # record geometry of each attraction
-			timeperDay = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]  # record visit time of each attraction
-			attrLat = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
-			attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
-			allName[0]=hotel
-			allName[len(itinerary['dayPlans'][i]['attractionVisit']) + 1] = hotel
-			map_label[i]="1"
-			for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
-				q=j+2
-				map_label[i] = map_label[i]+str(q)
-				allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
-			map_label[i] = map_label[i]+"1"
-			print(map_label[i])
-		else:
-			allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
-			direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
-			direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
-			attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]  # record geometry of each attraction
-			timeperDay = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]  # record visit time of each attraction
-			attrLat = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
-			attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
-			for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
-				map_label[i] = map_label[i]+str(j+1)
-				allName[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
-			print(map_label[i])
+        if hotel:
+            allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
+            direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
+            direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
+            attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]  # record geometry of each attraction
+            timeperDay = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]  # record visit time of each attraction
+            attrLat = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
+            attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
+            allName[0]=hotel
+            allName[len(itinerary['dayPlans'][i]['attractionVisit']) + 1] = hotel
+            map_label[i]="1"
+            for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
+                q=j+2
+                map_label[i] = map_label[i]+str(q)
+                allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
+            map_label[i] = map_label[i]+"1"
+            print(map_label[i])
+        else:
+            allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]  # record geometry of each attraction
+            timeperDay = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]  # record visit time of each attraction
+            attrLat = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
+                map_label[i] = map_label[i]+str(j+1)
+                allName[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
+            print(map_label[i])
 
-		for j in range(len(allName)):  # for j in numverofAttracttions per day
-			if hotel=='' and j == 0:
-				lastAttr = ''
-			elif j==0:
-				lastAttr = hotel
-			else:
-				lastAttr = allName[j-1]
+        for j in range(len(allName)):  # for j in numverofAttracttions per day
+            if hotel=='' and j == 0:
+                lastAttr = ''
+            elif j==0:
+                lastAttr = hotel
+            else:
+                lastAttr = allName[j-1]
 
-			API_ENDPOINT = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={allName[j]}&inputtype=textquery&fields=geometry&key={API_KEY}"
-			attrlocation = getjson(API_ENDPOINT)
-			attrGeometry[j] = attrlocation['candidates'][0]['geometry']['location']
-			attrLat[j] = attrGeometry[j]['lat']
-			attrLng[j] = attrGeometry[j]['lng']
-			lat_sum = lat_sum + attrGeometry[j]['lat']
-			lng_sum = lng_sum + attrGeometry[j]['lng']
-			if hotel:
-				if j>0 and j< (len(allName)-1):
-					timeperDay[j] = itinerary['dayPlans'][i]['attractionVisit'][j-1]['timeofDay']
-			else:
-				timeperDay[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['timeofDay']
+            API_ENDPOINT = f"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={allName[j]}&inputtype=textquery&fields=geometry&key={API_KEY}"
+            attrlocation = getjson(API_ENDPOINT)
+            attrGeometry[j] = attrlocation['candidates'][0]['geometry']['location']
+            attrLat[j] = attrGeometry[j]['lat']
+            attrLng[j] = attrGeometry[j]['lng']
+            lat_sum = lat_sum + attrGeometry[j]['lat']
+            lng_sum = lng_sum + attrGeometry[j]['lng']
+            if hotel:
+                if j>0 and j< (len(allName)-1):
+                    timeperDay[j] = itinerary['dayPlans'][i]['attractionVisit'][j-1]['timeofDay']
+            else:
+                timeperDay[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['timeofDay']
 
-			direc_url[j] = f"https://www.google.com/maps/dir/?api=1&origin={lastAttr}&destination={allName[j]} Singapore&travelmode=transit"
-			direct_url[j] = direc_url[j].replace(" ","")
+            direc_url[j] = f"https://www.google.com/maps/dir/?api=1&origin={lastAttr}&destination={allName[j]} Singapore&travelmode=transit"
+            direct_url[j] = direc_url[j].replace(" ","")
 
-		travelPlanCoordinates[i] = attrGeometry
-		attrList[i] = allName
-		attrLatList[i] = attrLat
-		attrLngList[i] = attrLng
-		centerGeometry[i] = [lat_sum / len(allName),
-							 lng_sum / len(allName)]
-		print(centerGeometry[i])
-		timeofDays[i] = timeperDay
-		direct[i] = direct_url
+        travelPlanCoordinates[i] = attrGeometry
+        attrList[i] = allName
+        attrLatList[i] = attrLat
+        attrLngList[i] = attrLng
+        centerGeometry[i] = [lat_sum / len(allName),
+                             lng_sum / len(allName)]
+        print(centerGeometry[i])
+        timeofDays[i] = timeperDay
+        direct[i] = direct_url
 
-	context = {
-		"dayPlans": itinerary["dayPlans"],
-		"pk": pk,
-		"travelPlanCoordinates":travelPlanCoordinates,
-		"attrLatList":attrLatList,
-		"attrLngList":attrLngList,
-		"timeofDays":timeofDays,
-		"centerGeometry":centerGeometry,
-		"direct":direct,
-		"attrList":attrList,
-		"map_label":map_label
-	}
-	return render(request, 'itinerary.html', context)
+    context = {
+        "dayPlans": itinerary["dayPlans"],
+        "pk": pk,
+        "travelPlanCoordinates":travelPlanCoordinates,
+        "attrLatList":attrLatList,
+        "attrLngList":attrLngList,
+        "timeofDays":timeofDays,
+        "centerGeometry":centerGeometry,
+        "direct":direct,
+        "attrList":attrList,
+        "map_label":map_label
+    }
+    return render(request, 'itinerary.html', context)
+
+
+
 
 
 def trippingoRecommendations(req,pk):

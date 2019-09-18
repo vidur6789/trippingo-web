@@ -3,9 +3,13 @@
         display: table-cell;
     }
     .card-item img {
-        min-height: 13.6rem;
-        width: 100%;
+        {#min-height: 13.6rem;#}
+        width: 80%;
     }
+     {#.list-group-item img{#}
+     {#   min-height: 5rem;#}
+     {#   width: 70%;#}
+     {#}#}
 </style>
 
 {% extends "base.html" %}
@@ -21,13 +25,13 @@
     <div class="col-12 col-sm-8 col-lg-9">
       <ul class="list-group" id="recommendation_list">
         {% for rec in recs %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <li class="list-group-item d-flex justify-content-space-evenly align-items-center">
           <input class="form-check-input" type="checkbox" {% if rec.selected %} checked {% endif %} id="defaultCheck1" name="{{rec.attraction_id}}"
                 onchange="handleUpdate()">
-          <div class="image-parent">
-              <img class="img-fluid" src="{{rec.img_url}}" width="150px" height="100px">
+          <div class="image-parent" style="margin-right: 20px">
+              <img class="rounded float-left" src="{{rec.img_url}}" width="150px" height="100px">
           </div>
-          <h5 class="card-title">{{ rec.name }}</h5>
+        <div style="width: 250px; margin-right: 20px"><strong class="card-title">{{ rec.name }}</strong></div>
                 <p class="card-text">{{ rec.description }}</p>
           
         </li>
@@ -52,12 +56,12 @@
                 <div class="col-12 col-sm-8 col-lg-9" id="recommendation_list_interest">
                  {% for arec in associatedRecs%}
                     <div class="card-item" >
-                    <div class="card" style="width: 16.5rem;">
-                          <img class="card-img-top" src="{{arec.img_url}}" alt="Card image cap" width="150px" height="100px">
+                    <div class="card" style="width: 12.5rem; height: 7.5rem">
+                          <img class="rounded mx-auto d-block" src="{{arec.img_url}}" alt="Card image cap" width="150px" height="100px">
                           <div class="card-body" id="association_list">
                             <input class="form-check-input" type="checkbox"{% if arec.0.selected %} checked {% endif %}
                                      name="{{arec.attraction_id}}" onclick="handleUpdate()">
-                                <h6 class="card-title">{{ arec.name }}</h6>
+                                <strong class="card-title">{{ arec.name }}</strong>
                           </div>
                         </div>
                     </div>
@@ -117,14 +121,14 @@
     function update_list_interest() {
 
         let inputList = $("#recommendation_list_interest input")
-        let h6List = $("#recommendation_list_interest h6")
+        let strongList = $("#recommendation_list_interest strong")
 
         for (let i = 0; i < inputList.length; i++) {
             if(inputList[i].checked){
                 var li = document.createElement("li");
-                var attraction_name = h6List[i].innerText
+                var attraction_name = strongList[i].innerText
                 console.log(attraction_name)
-                li.innerHTML = '<li class="list-group-item">' +attraction_name +'</li>';
+                li.innerHTML = '<li class="list-group-item"><strong>' +attraction_name +'</strong></li>';
                 attraction_list.appendChild(li);
             }
         }
