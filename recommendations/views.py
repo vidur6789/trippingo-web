@@ -183,6 +183,7 @@ def associationRecommendations(req,pk):
 	rec_list = []
 	association_recs = []
 	allcom_list = []
+	duplicate_check = []
 	# getting names of recommended attractions
 	for rec in recommendations:
 		rec_list.append(rec.name)
@@ -206,8 +207,12 @@ def associationRecommendations(req,pk):
 			if len(association_api_response) != 0:
 				for a in association_api_response:
 					# print(a)
-					if a["name"] not in rec_list and mapToModel(a) not in association_recs:
+
+					if a["name"] not in rec_list and a["name"] not in duplicate_check:
+						print(a["name"])
+						duplicate_check.append(a["name"])
 						association_recs.append(mapToModel(a))
+						print(duplicate_check)
 					# break
 		else:
 			break
