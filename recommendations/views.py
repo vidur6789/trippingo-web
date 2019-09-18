@@ -56,7 +56,68 @@ def itinerary(request,pk):
 	print("Entered itinerary")
 	itinerary_resp = plan_itinerary(pk)
 	itinerary = dict(itinerary_resp.json())
+	# itinerary = {
+	# 	"itineraryId": 3203,
+	# 	"dayPlans": [
+	# 		{"id": 3205, "travelDate": "2019-09-23", "serialNo": 1,
+	# 		 "attractionVisit": [
+	# 			 {
+	# 				 "serialNo": 200,
+	# 				 "timeofDay": "17:15:00",
+	# 				 "attraction": {
+	# 					 "id": 7,
+	# 					 "name": "Singapore Flyer",
+	# 					 "description": "At 165 metres tall, Singapore Flyer is a masterpiece of urban architecture and engineering that showcases not only the mesmerizing cosmopolitan cityscape of the tropical Lion City, but even the surrounding islands of Indonesia and parts of Malaysia in all their glory. In addition to offering panoramic views of Singapore's cosmopolitan cityscape, guests can also indulge in a flute of champagne, or savour the iconic Singapore Sling whilst hosted in a special themed capsule. Diners seeking both privacy and luxury can opt for a multi-sensory treat unlike any other with our Premium Sky Dining Flight, complete with a four-course dinner and an in-flight host.",
+	# 					 "categories": ["Landmark"], "openingTime": "08:30:00", "closingTime": "22:00:00",
+	# 					 "recommendedDuration": {"from": 2.0, "to": 3.0},
+	# 					 "price": 22, "postalCode": "039803", "keywords": "", "reviews": [],
+	# 					 "attractionRank": {"familyRank": 4, "coupleRank": 6, "friendsRank": 8, "businessRank": 72,
+	# 										"soloRank": 6},
+	# 					 "isOutdoor": 1, "promotions": 22, "openingTimeGrains": 34, "closingTimeGrains": 88,
+	# 					 "durationTimeGrains": 10, "maxDurationTimeGrains": 12,
+	# 					 "minDurationTimeGrains": 8}
+	# 			 },
+	# 			 {
+	# 				 "serialNo": 200,
+	# 				 "timeofDay": "18:15:00",
+	# 				 "attraction": {
+	# 					 "id": 7,
+	# 					 "name": "Gardens by the Bay",
+	# 					 "description": "At 165 metres tall, Singapore Flyer is a masterpiece of urban architecture and engineering that showcases not only the mesmerizing cosmopolitan cityscape of the tropical Lion City, but even the surrounding islands of Indonesia and parts of Malaysia in all their glory. In addition to offering panoramic views of Singapore's cosmopolitan cityscape, guests can also indulge in a flute of champagne, or savour the iconic Singapore Sling whilst hosted in a special themed capsule. Diners seeking both privacy and luxury can opt for a multi-sensory treat unlike any other with our Premium Sky Dining Flight, complete with a four-course dinner and an in-flight host.",
+	# 					 "categories": ["Landmark"], "openingTime": "08:30:00", "closingTime": "22:00:00",
+	# 					 "recommendedDuration": {"from": 2.0, "to": 3.0},
+	# 					 "price": 22, "postalCode": "039803", "keywords": "", "reviews": [],
+	# 					 "attractionRank": {"familyRank": 4, "coupleRank": 6, "friendsRank": 8, "businessRank": 72,
+	# 										"soloRank": 6},
+	# 					 "isOutdoor": 1, "promotions": 22, "openingTimeGrains": 34, "closingTimeGrains": 88,
+	# 					 "durationTimeGrains": 10, "maxDurationTimeGrains": 12,
+	# 					 "minDurationTimeGrains": 8}
+	# 			 }
+	# 		 ]},
 
+	# 		{"id": 3204, "travelDate": "2019-09-24", "serialNo": 2, "attractionVisit": [
+	# 			{"serialNo": 300, "timeofDay": "09:30:00", "attraction": {"id": 1, "name": "Singapore Zoo",
+	# 																	  "description": "An integral part of Singapore's \"City in a Garden\" vision, Gardens by the Bay spans a total of 101 hectares of prime land at the heart of Singapore's new downtown - Marina Bay. Comprising three waterfront gardens - Bay South, Bay East and Bay Central - Gardens by the Bay will be a showcase of horticulture and garden artistry that will bring the world of plants to Singapore and present Singapore to the World.",
+	# 																	  "categories": ["NaturePark", "Landmark"],
+	# 																	  "openingTime": "05:00:00",
+	# 																	  "closingTime": "02:00:00",
+	# 																	  "recommendedDuration": {"from": 3.0,
+	# 																							  "to": -1.0},
+	# 																	  "price": 2222, "postalCode": "018953",
+	# 																	  "keywords": "", "reviews": [],
+	# 																	  "attractionRank": {"familyRank": 1,
+	# 																						 "coupleRank": 1,
+	# 																						 "friendsRank": 1,
+	# 																						 "businessRank": 1,
+	# 																						 "soloRank": 1},
+	# 																	  "isOutdoor": 2, "promotions": 2,
+	# 																	  "openingTimeGrains": 20,
+	# 																	  "closingTimeGrains": 8,
+	# 																	  "durationTimeGrains": 8,
+	# 																	  "maxDurationTimeGrains": 4,
+	# 																	  "minDurationTimeGrains": 12}}]}
+	# 	]
+	# }
 	for dayp in itinerary["dayPlans"]:
 		for j in dayp["attractionVisit"]:
 			daytime = time.strptime(j["timeofDay"], "%H:%M:%S")
@@ -64,6 +125,7 @@ def itinerary(request,pk):
 
 	attrName = ''
 	hotel = ''
+	#url = TRIPPINGO_URL + "/travelPlans/{pk}".format(pk)
 	map_label= ["" for _ in range(len(itinerary['dayPlans']))]
 	API_KEY = 'AIzaSyCZ4Q24NuUFkO3sQBdtcwNxSnO3qwZqwW8'
 
@@ -71,20 +133,16 @@ def itinerary(request,pk):
 
 	travelPlanCoordinates = [0 for _ in range(len(itinerary['dayPlans']))]  # travelPlanCoordinates list with geometry of attractions(the jth attraction of i day)
 	centerGeometry = [0 for _ in range(len(itinerary['dayPlans']))]  # #record average Geometry (centre point) of each day
-	num_day = len(itinerary['dayPlans'])
 	timeofDays = [0 for _ in range(len(itinerary['dayPlans']))]  ##record visit time of all attractions
-	str_list = [0 for _ in range(len(itinerary['dayPlans']))]
 	direct = [0 for _ in range(len(itinerary['dayPlans']))]
 	attrLatList = [0 for _ in range(len(itinerary['dayPlans']))]
 	attrLngList = [0 for _ in range(len(itinerary['dayPlans']))]
 	q = 0
-	hotel = ''
 
 	for i in range(len(itinerary['dayPlans'])):  # for i in numverofDays
 		lat_sum = 0  # record the sum of attractions latitude per day
 		lng_sum = 0  # record the sum of attractions lagnitude per day
 		q = i+1
-		str_list[i] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == "+str(q)+" %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}"
 
 		if hotel:
 			allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
@@ -150,7 +208,6 @@ def itinerary(request,pk):
 		timeofDays[i] = timeperDay
 		direct[i] = direct_url
 
-	print(str_list[0])
 	context = {
 		"dayPlans": itinerary["dayPlans"],
 		"pk": pk,
@@ -161,9 +218,7 @@ def itinerary(request,pk):
 		"centerGeometry":centerGeometry,
 		"direct":direct,
 		"attrList":attrList,
-		"map_label":map_label,
-		"str_list":str_list,
-		"num_day":num_day
+		"map_label":map_label
 	}
 	return render(request, 'itinerary.html', context)
 
