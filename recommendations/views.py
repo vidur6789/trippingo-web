@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import requests
 from django.http import JsonResponse
 from recommendations.models import Recommendation
+from itertools import combinations
 
 # Create your views here.
 
@@ -24,18 +25,21 @@ def recommendations(request):
 
 def recommendations_pk(request, pk):
 	print("Entered recommendations_pk")
-	recs=trippingoRecommendations(request, pk)
+	recs,association_recs=associationRecommendations(request,pk)
 	context = {
 		"recs":recs,
 		"selectedRecs":[rec for rec in recs if rec.selected],
+		"associatedRecs":association_recs,
 		"pk":pk
 	}
+	print(context['selectedRecs'])
 	return render(request, 'recommendations.html', context)
 
 
 def selectedAttractions(request,pk):
 
-	print("Entered selectedAttractions")
+	print("----------Entered selectedAttractions")
+	print(request)
 	selected_attractions = [int(key) for key, value in request.POST.dict().items() if value == 'on']
 	print(selected_attractions)
 	saveSelectedAttractions(1, selected_attractions)
@@ -55,11 +59,46 @@ def itinerary(request,pk):
 def trippingoRecommendations(req):
 	keywords = 'Landmark'
 	travellerType = 'Family'
-	url = TRIPPINGO_URL + "/{id}/recommendations?count=10".format(id=pk);
+	url = TRIPPINGO_URL + "/travelPlans/{id}/recommendations?count=10".format(id=pk);
 	print(url)
 	api_response = getjson(url)
 	recommendations = [mapToModel(rec) for rec in api_response]
+
 	return recommendations
+
+def associationRecommendations(req,pk):
+	recommendations = trippingoRecommendations(req)
+	rec_list = []
+	association_recs = []
+	allcom_list = []
+	# getting names of recommended attractions
+	for rec in recommendations:
+		rec_list.append(rec.name)
+	# getting all possible combinations of recommended attractions
+	for i in range(len(rec_list)):
+		temp = []
+		for j in combinations(rec_list,i):
+			temp.append(j)
+		allcom_list.extend(temp)
+	for arec in allcom_list:
+		if len(arec) == 1:
+			association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
+				id=pk, attr_names=arec[0]);
+		elif len(arec) > 1:
+			association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
+				id=pk, attr_names=','.join(arec));
+		else:
+			continue
+		association_api_response = getjson(association_url)
+		if len(association_api_response) != 0:
+			for a in association_api_response:
+				print(a)
+				if a["name"] not in rec_list and mapToModel(a) not in association_recs:
+					association_recs.append(mapToModel(a))
+					# break
+	print('association_recs',association_recs)
+	return recommendations, association_recs
+
 
 
 def saveSelectedAttractions(travel_plan_id, selected_attractions):
@@ -76,6 +115,7 @@ def plan_itinerary(travel_plan_id):
 	print(url)
 	data = {}
 	resp = requests.put(url, json=data)
+	print(data)
 	return resp
 
 
@@ -87,13 +127,17 @@ def mapToModel(rec):
 
 
 def getjson(url):
-    resp = requests.get(url)
-    return resp.json()
+	resp = requests.get(url)
+	return resp.json()
 
 
 def getPhoto(attrname):
- 	API_ENDPOINT = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={attrname}&inputtype=textquery&fields=photos&key={APIKEY}".format(attrname=attrname, APIKEY=APIKEY)
- 	info = getjson(API_ENDPOINT)
- 	photo_ref = info['candidates'][0]['photos'][0]['photo_reference']
- 	photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={APIKEY}".format(photo_ref=photo_ref, APIKEY=APIKEY)
- 	return photo_url
+	API_ENDPOINT = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={attrname}&inputtype=textquery&fields=photos&key={APIKEY}".format(attrname=attrname, APIKEY=APIKEY)
+	info = getjson(API_ENDPOINT)
+	photo_ref = info['candidates'][0]['photos'][0]['photo_reference']
+	photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_ref}&key={APIKEY}".format(photo_ref=photo_ref, APIKEY=APIKEY)
+	return photo_url
+
+
+
+

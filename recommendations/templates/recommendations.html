@@ -1,19 +1,30 @@
+<style xmlns="http://www.w3.org/1999/html">
+    .card-item {
+        background-color: pink;
+        display: table-cell;
+    }
+    .card-item img {
+        min-height: 13.6rem;
+        width: 100%;
+    }
+</style>
+
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
 <h1 class="text-center">ATTRACTION RECOMMENDATION</h1>
 
-<h6 class="text-center">Based on your infomation, we recommend these attractions to you:</span>
-<form action="../{{pk}}/selectedAttractions" method='POST'>
+<h6 class="text-center">Based on your infomation, we recommend these attractions to you:</h6>
+<br action="../{{pk}}/selectedAttractions" method='POST'>
     {% csrf_token %}
-<div class="container">
+<br class="container">
   <div class="row">
     <div class="col-12 col-sm-8 col-lg-9">
       <ul class="list-group" id="recommendation_list">
         {% for rec in recs %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <input class="form-check-input" type="checkbox" {% if rec.selected %} checked {% endif %} id="defaultCheck1" name="{{rec.attraction_id}}"
-                onchange="update_list()">
+                onchange="handleUpdate()">
           <div class="image-parent">
               <img class="img-fluid" src="{{rec.img_url}}" width="150px" height="100px">
           </div>
@@ -33,33 +44,101 @@
 </ul>
     </div>
   </div>
+</br>
+<HR SIZE=100 width=75% align=left>
+<h6 class="text-center">You may also be interested in:</h6>
+<form>
+    <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-8 col-lg-9" id="recommendation_list_interest">
+                 {% for arec in associatedRecs%}
+                    <div class="card-item" >
+                    <div class="card" style="width: 16.5rem;">
+                          <img class="card-img-top" src="{{arec.img_url}}" alt="Card image cap">
+                          <div class="card-body" id="association_list">
+                            <input class="form-check-input" type="checkbox"{% if arec.0.selected %} checked {% endif %}
+                                     name="{{arec.attraction_id}}" onclick="handleUpdate()">
+                                <h5 class="card-title">{{ arec.name }}</h5>
+                          </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+      </div>
+    </div>
 
-<button type="submit" class="save btn btn-default">Next></button>
+</form>
+<br />
+<br />
+<button type="submit" class="save btn btn-default" style="display:block;margin:0 auto">Next></button>
 
 </div>
 </form>
+
+
+
 <script>
+    pk = {{ pk }}
+        {% autoescape off %}
+            associationDict = {{ associationDict}}
+        {% endautoescape %}
     console.log('Executing script')
+    console.log(associationDict)
+    function handleUpdate(el){
+        clear_element()
+        update_list()
+        if(el)update_association_list()
+        update_list_interest()
+
+
+    }
+
     function update_list() {
         console.log('update_list');
         rec_list = document.getElementById("recommendation_list")
-        attraction_list = document.getElementById("attraction_list")
-        while(attraction_list.firstChild){ 
-            attraction_list.removeChild(attraction_list.firstChild);
-        }
+
         var children = rec_list.children;
+        var checked_list = []
+
         for (var i = 0; i < children.length; i++) {
             var list_item = children[i];
-            var li = document.createElement("li");
-            var attraction_name = list_item.children[2].innerHTML
-            if(list_item.children[0].checked == true){
+
+            if (list_item.children[0].checked == true) {
+                checked_list.push(list_item.children[2].innerHTML)
+                var li = document.createElement("li");
+                var attraction_name = list_item.children[2].innerHTML
+                console.log(attraction_name)
+                li.innerHTML = '<li class="list-group-item">' + attraction_name + '</li>';
+                attraction_list.appendChild(li);
+            }
+        }
+    }
+
+
+    function update_list_interest() {
+
+        let inputList = $("#recommendation_list_interest input")
+        let h5List = $("#recommendation_list_interest h5")
+
+        for (let i = 0; i < inputList.length; i++) {
+            if(inputList[i].checked){
+                var li = document.createElement("li");
+                var attraction_name = h5List[i].innerText
                 console.log(attraction_name)
                 li.innerHTML = '<li class="list-group-item">' +attraction_name +'</li>';
                 attraction_list.appendChild(li);
             }
         }
-    
     }
+    function clear_element() {
+        attraction_list = document.getElementById("attraction_list")
+        while(attraction_list.firstChild){
+            attraction_list.removeChild(attraction_list.firstChild);
+        }
+
+    }
+
+
   </script>
 {% endblock %}
 
