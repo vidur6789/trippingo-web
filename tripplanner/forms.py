@@ -25,6 +25,26 @@ Travel_Dates_C=	[
 						(False			,	'Flexible')
 						]
 
+MaxHours_C =	[
+						(1			,	'1'),
+						(2			,	'2'),
+						(3			,	'3'),
+						(4			,	'4'),
+						(5			,	'5'),
+						(6			,	'6'),
+						(7			,	'7'),
+						(8			,	'8'),
+						(9			,	'9'),
+						(10			,	'10'),
+						(11			,	'11'),
+						(12			,	'12'),
+						(13			,	'13'),
+						(14			,	'14')
+
+						]
+
+
+
 
 # Meal_Preference_C	= 	[
 # 						('LongMeal'		,	'Long Meal'),
@@ -89,20 +109,20 @@ class FlexTravel (forms.Form):
 											}						)
 										)
 
-	Min_Hours_Per_Day = forms.IntegerField		(		
-											widget 	= forms.TextInput(
+	Min_Hours_Per_Day = forms.ChoiceField		(		
+											choices = MaxHours_C,
+											widget 	= forms.Select(
 											attrs 	= {
-											'class'			: 'form-control',
-											'placeholder' 	: '4'
-											}						)
-										)
-	Max_Hours_Per_Day = forms.IntegerField	(	
-											widget 	= forms.TextInput(
-											attrs 	= {
-											'class'			: 'form-control',
-											'placeholder' 	: '8'
+											'select class'	: 'custom-select my-1 mr-sm-2',
 											})
 										)
+	Max_Hours_Per_Day = forms.ChoiceField	(	
+											choices = MaxHours_C,
+											widget 	= forms.Select(
+											attrs 	= {
+											'select class'	: 'custom-select my-1 mr-sm-2',
+											})
+										)#MaxHours = 14
 	# Meal_Preferences = forms.ChoiceField	(
 	# 										choices = Meal_Preference_C,
 	# 										required= True,
@@ -115,11 +135,11 @@ class FlexTravel (forms.Form):
 	# 									)
 
 										
-	Hotel_Postal = forms.IntegerField	(	
+	Hotel_Name = forms.CharField	(	
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
-											'placeholder' 	: '123456'
+											'placeholder' 	: 'Marina Bay Sands'
 											}						)
 										)
 
@@ -146,18 +166,18 @@ class NonFlexTravel (forms.Form):
 											}
 											)
     									)					
-	Min_Hours_Per_Day = forms.IntegerField	(		
-											widget 	= forms.TextInput(
+	Min_Hours_Per_Day = forms.ChoiceField		(		
+											choices = MaxHours_C,
+											widget 	= forms.Select(
 											attrs 	= {
-											'class'			: 'form-control',
-											'placeholder' 	: '4'
-											}						)
+											'select class'	: 'custom-select my-1 mr-sm-2',
+											})
 										)
-	Max_Hours_Per_Day = forms.IntegerField	(	
-											widget 	= forms.TextInput(
+	Max_Hours_Per_Day = forms.ChoiceField	(	
+											choices = MaxHours_C,
+											widget 	= forms.Select(
 											attrs 	= {
-											'class'			: 'form-control',
-											'placeholder' 	: '8'
+											'select class'	: 'custom-select my-1 mr-sm-2',
 											})
 										)
 	# Meal_Preferences = forms.ChoiceField	(
@@ -170,11 +190,11 @@ class NonFlexTravel (forms.Form):
 	# 										}			
 	# 										)
 										# )
-	Hotel_Postal = forms.IntegerField	(	
+	Hotel_Name = forms.CharField	(	
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
-											'placeholder' 	: '123456'
+											'placeholder' 	: 'Marina Bay Sands'
 											}						)
 										)
 
