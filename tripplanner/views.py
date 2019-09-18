@@ -53,7 +53,7 @@ def NFlexyTravel(request):
 
 			resp = POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
-						FformInput['Hotel_Postal'],
+						FformInput['Hotel_Name'],
 						FformInput['Arrival_Date'].strftime('%Y-%m-%d') ,
 						FformInput['Departure_Date'].strftime('%Y-%m-%d') ,
 						True, 
@@ -100,7 +100,7 @@ def FlexyTravel(request):
 			FformInput = Flex.clean()
 			resp = POSTData (	BformInput['Your_Name'],
 						BformInput['Your_Email'] , 
-						FformInput['Hotel_Postal'],
+						FformInput['Hotel_Name'],
 						'' ,
 						'' ,
 						True, 

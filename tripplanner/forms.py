@@ -135,11 +135,11 @@ class FlexTravel (forms.Form):
 	# 									)
 
 										
-	Hotel_Postal = forms.IntegerField	(	
+	Hotel_Name = forms.CharField	(	
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
-											'placeholder' 	: '123456'
+											'placeholder' 	: 'Marina Bay Sands'
 											}						)
 										)
 
@@ -190,11 +190,11 @@ class NonFlexTravel (forms.Form):
 	# 										}			
 	# 										)
 										# )
-	Hotel_Postal = forms.IntegerField	(	
+	Hotel_Name = forms.CharField	(	
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',
-											'placeholder' 	: '123456'
+											'placeholder' 	: 'Marina Bay Sands'
 											}						)
 										)
 
