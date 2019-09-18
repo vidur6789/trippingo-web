@@ -1,6 +1,5 @@
 <style xmlns="http://www.w3.org/1999/html">
     .card-item {
-        background-color: pink;
         display: table-cell;
     }
     .card-item img {
@@ -54,11 +53,11 @@
                  {% for arec in associatedRecs%}
                     <div class="card-item" >
                     <div class="card" style="width: 16.5rem;">
-                          <img class="card-img-top" src="{{arec.img_url}}" alt="Card image cap">
+                          <img class="card-img-top" src="{{arec.img_url}}" alt="Card image cap" width="150px" height="100px">
                           <div class="card-body" id="association_list">
                             <input class="form-check-input" type="checkbox"{% if arec.0.selected %} checked {% endif %}
                                      name="{{arec.attraction_id}}" onclick="handleUpdate()">
-                                <h5 class="card-title">{{ arec.name }}</h5>
+                                <h6 class="card-title">{{ arec.name }}</h6>
                           </div>
                         </div>
                     </div>
