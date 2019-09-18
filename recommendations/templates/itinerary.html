@@ -69,7 +69,6 @@ function initialize(k) {
     if("undefined" == typeof k){k=1; }
     k = k-1;
     clear_att();
-    var dayplans = {{dayPlans|safe}};
 
     var labels = labels_list[k];
     var attrLatList = {{attrLatList}};
@@ -103,8 +102,6 @@ function initialize(k) {
           }
     labelIndex = 0;
 
-    var day_plan = dayplans[k]['attractionVisit'][0]['attraction']['recommendedDuration'];
-    console.log(day_plan);
     for(var i=0; i< attrLatList[k].length ; i++){
         var ul = document.createElement("ul");
         ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +attrList[k][i] +
