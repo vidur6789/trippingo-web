@@ -117,12 +117,12 @@
     function update_list_interest() {
 
         let inputList = $("#recommendation_list_interest input")
-        let h5List = $("#recommendation_list_interest h5")
+        let h6List = $("#recommendation_list_interest h6")
 
         for (let i = 0; i < inputList.length; i++) {
             if(inputList[i].checked){
                 var li = document.createElement("li");
-                var attraction_name = h5List[i].innerText
+                var attraction_name = h6List[i].innerText
                 console.log(attraction_name)
                 li.innerHTML = '<li class="list-group-item">' +attraction_name +'</li>';
                 attraction_list.appendChild(li);
