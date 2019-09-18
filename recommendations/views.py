@@ -193,22 +193,25 @@ def associationRecommendations(req,pk):
 			temp.append(j)
 		allcom_list.extend(temp)
 	for arec in allcom_list:
-		if len(arec) == 1:
-			association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
-				id=pk, attr_names=arec[0]);
-		elif len(arec) > 1:
-			association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
-				id=pk, attr_names=','.join(arec));
-		else:
-			continue
-		association_api_response = getjson(association_url)
-		if len(association_api_response) != 0:
-			for a in association_api_response:
-				#print(a)
-				if a["name"] not in rec_list and mapToModel(a) not in association_recs:
-					association_recs.append(mapToModel(a))
+		if len(association_recs)<4:
+			if len(arec) == 1:
+				association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
+					id=pk, attr_names=arec[0]);
+			elif len(arec) > 1:
+				association_url = TRIPPINGO_URL + "/travelPlans/{id}/associatedAttractions?attractions={attr_names}".format(
+					id=pk, attr_names=','.join(arec));
+			else:
+				continue
+			association_api_response = getjson(association_url)
+			if len(association_api_response) != 0:
+				for a in association_api_response:
+					# print(a)
+					if a["name"] not in rec_list and mapToModel(a) not in association_recs:
+						association_recs.append(mapToModel(a))
 					# break
-	#print('association_recs',association_recs)
+		else:
+			break
+	print('association_recs',association_recs)
 	return recommendations, association_recs
 
 
