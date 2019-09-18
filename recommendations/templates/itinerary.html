@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+#map {
+  height: 500px;
+}
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 14px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+*{margin:0;padding:0;}
+#main{
+    width:100%;
+    overflow:hidden;
+}
+#main .main-left{
+    width:15%;
+    float:left;
+}
+#main .main-center{
+    width:25%;
+    float:left;
+}
+#main .main-right{
+    width:60%;
+    float:right;
+    background:lightgreen;
+}
+</style>
+
+<script>
+function attdetail(i) {
+    //var str = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == "+ i +"%}<p class='test'>"+i+"</p>{% endif %}{% endfor %}";
+    var str="<p class='test'>"+i+"</p>"
+    document.getElementById("daydetail").innerHTML=str;
+    console.log(str);
+}
+</script>
+
+<h1 class="text-center">YOUR ITINERARY</h1>
+  <div class="container" id="main">
+      <div id="dayPlans" d="{{dayPlans}}" style="display:none"></div>
+      <div id="direct" d="{{direct}}" style="display:none"></div>
+      <div class="main-left">
+          <ul style="list-style-type:none;">
+              {%for dayplan in dayPlans %}
+            <li>
+                <button class="button" onclick="initialize({{ forloop.counter }}) ">DAY {{ forloop.counter }}</button>
+            </li>
+              {% endfor %}
+          </ul>
+      </div>
+
+      <div class="main-center">
+          <ul id="daydetail" style="list-style-type:none;">
+              {% for dayplan in dayPlans %}{% if dayplan.serialNo == 2  %}{% for att in dayplan.attractionVisit%}<li class="d-flex justify-content-between align-items-center"><strong>{{att.attraction.name}}</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}
+          </ul>
+      </div>
+
+      <div  class="main-right">
+        <div id="map"></div>
+          <script>
+
+    var labels_list = {{map_label|safe}};
+    var labelIndex = 0;
+    var k;
+
+    function initialize(k) {
+    if("undefined" == typeof k){k=1; }
+    k = k-1;
+
+    var labels = labels_list[k];
+    console.log(labels);
+    var attrLatList = {{attrLatList}};
+    var attrLngList = {{attrLngList}};
+    var centerGeometry_list = {{centerGeometry}} ;
+    var centerGeometry = {lat: centerGeometry_list[k][0],lng: centerGeometry_list[k][1]};
+    var travelPlanCoordinates = [];
+    for(q=0; q<attrLatList[k].length; q++){
+        travelPlanCoordinates[q] = {lat: attrLatList[k][q],lng: attrLngList[k][q]};
+    }
+    var travelPath = new google.maps.Polyline({
+        path: travelPlanCoordinates,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+    });
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: centerGeometry
+    });
+
+    travelPath.setMap(map);
+
+    var timeofDay = {{timeofDays|safe}};
+    var direct = {{direct|safe}};
+    var attrList = {{attrList|safe}};
+        for (i = 0; i < travelPlanCoordinates.length; i++) {
+            addMarker(attrList[k][i], travelPlanCoordinates[i], map, direct[k][i], timeofDay[k][i],labels);
+          }
+     labelIndex = 0;
+    var num_day = {{num_day|safe}};
+    var str_list=[];
+    str_list[0] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 1 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";
+    if(num_day>1){str_list[1] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 2 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>2){str_list[2] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 3 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>3){str_list[3] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 4 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>4){str_list[4] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 5 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>5){str_list[5] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 6 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>6){str_list[6] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 7 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>7){str_list[7] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 8 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    if(num_day>8){str_list[8] = "{% for dayplan in dayPlans %}{% if dayplan.serialNo == 9 %}{% for att in dayplan.attractionVisit %}<li class='d-flex justify-content-between align-items-center'><strong>{{att.attraction.name}}</strong></li><li class='d-flex justify-content-between align-items-center'><p>Arrival Time: {{att.timeofDay}}</p></li>{% endfor %}{% endif %}{% endfor %}";}
+    document.getElementById("daydetail").innerHTML=str_list[k];
+    }
+
+// Adds a marker to the map.
+function addMarker(attr, location, map, direct, time,labels) {
+  var marker = new google.maps.Marker({
+    position: location,
+    label: labels[labelIndex++ % labels.length],
+    map: map,
+    title: attr
+  });
+  //document.getElementById('s1').value = location
+  //Time suppose to be
+  // direction
+  var contentString =
+    '<div id="content">' +
+    '<div id="siteNotice">' +
+    '</div>' +
+    '<h1 id="firstHeading" class="firstHeading"></h1>' +
+    '<p><b>' + attr + '</b>' +
+    '<div id="bodyContent">' +
+    '<a href = '+direct+'> Direct to Google Maps<a>'+
+    '<p><b></b>'
+  '</div>' +
+  '</div>';
+
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+}
+
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ4Q24NuUFkO3sQBdtcwNxSnO3qwZqwW8&callback=initialize"
+    async defer></script>
+
+{% endblock %}
+
