@@ -51,6 +51,14 @@ def planning(request, pk):
     print("Entered planning")
     return render(request, 'planning.html', {"pk":pk})
 
+def getpromotion(attrID):
+    promotion_url = TRIPPINGO_URL+'/attractions/{attr_id}/?detailed=true'.format(attr_id=attrID)
+    attr_pro = getjson(promotion_url)
+    if attr_pro['promotions']:
+        promotion = attr_pro['promotions'][0]['url']
+    else:
+        promotion = ''
+    return promotion
 
 def itinerary(request,pk):
 
@@ -65,16 +73,14 @@ def itinerary(request,pk):
             else:
                 j["timeofDay"] = str(daytime.tm_hour) + ":" + "00"
 
-
     plan_url = TRIPPINGO_URL + "/travelPlans/{id}".format(id=pk)
     plan_info = getjson(plan_url)
     hotel = plan_info["hotelLocation"]
-    #url = TRIPPINGO_URL + "/travelPlans/{pk}".format(pk)
     map_label= ["" for _ in range(len(itinerary['dayPlans']))]
     API_KEY = 'AIzaSyCZ4Q24NuUFkO3sQBdtcwNxSnO3qwZqwW8'
 
     attrList = [0 for _ in range(len(itinerary['dayPlans']))]
-
+    promotionList = [0 for _ in range(len(itinerary['dayPlans']))]
     travelPlanCoordinates = [0 for _ in range(len(itinerary['dayPlans']))]  # travelPlanCoordinates list with geometry of attractions(the jth attraction of i day)
     centerGeometry = [0 for _ in range(len(itinerary['dayPlans']))]  # #record average Geometry (centre point) of each day
     timeofDays = [0 for _ in range(len(itinerary['dayPlans']))]  ##record visit time of all attractions
@@ -83,6 +89,8 @@ def itinerary(request,pk):
     attrLngList = [0 for _ in range(len(itinerary['dayPlans']))]
     q = 0
 
+
+
     for i in range(len(itinerary['dayPlans'])):  # for i in numverofDays
         lat_sum = 0  # record the sum of attractions latitude per day
         lng_sum = 0  # record the sum of attractions lagnitude per day
@@ -90,6 +98,7 @@ def itinerary(request,pk):
 
         if hotel:
             allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
+            promotions = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
             direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
             direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']) + 2)]
             attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]  # record geometry of each attraction
@@ -97,15 +106,20 @@ def itinerary(request,pk):
             attrLat = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
             attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
             allName[0]=hotel
+            promotions[0]=''
             allName[len(itinerary['dayPlans'][i]['attractionVisit']) + 1] = hotel
+            promotions[len(itinerary['dayPlans'][i]['attractionVisit']) + 1]=''
             map_label[i]="0"
             for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
                 q=j+2
                 map_label[i] = map_label[i]+str(q-1)
                 allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
+                attr_id = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['id']
+                promotions[j+1] = getpromotion(attr_id)
             map_label[i] = map_label[i]+"0"
         else:
             allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
+            promotions = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
             direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
             direct_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
             attrGeometry = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]  # record geometry of each attraction
@@ -115,6 +129,8 @@ def itinerary(request,pk):
             for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
                 map_label[i] = map_label[i]+str(j+1)
                 allName[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
+                attr_id = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['id']
+                promotions[j] = getpromotion(attr_id)
 
         for j in range(len(allName)):  # for j in numverofAttracttions per day
             if hotel=='' and j == 0:
@@ -142,6 +158,7 @@ def itinerary(request,pk):
 
         travelPlanCoordinates[i] = attrGeometry
         attrList[i] = allName
+        promotionList[i] = promotions
         attrLatList[i] = attrLat
         attrLngList[i] = attrLng
         centerGeometry[i] = [lat_sum / len(allName),
@@ -159,7 +176,8 @@ def itinerary(request,pk):
         "centerGeometry":centerGeometry,
         "direct":direct,
         "attrList":attrList,
-        "map_label":map_label
+        "map_label":map_label,
+        "promotionList":promotionList
     }
     return render(request, 'itinerary.html', context)
 

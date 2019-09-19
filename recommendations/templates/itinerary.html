@@ -101,6 +101,7 @@ function initialize(k) {
             addMarker(attrList[k][i], travelPlanCoordinates[i], map, direct[k][i], timeofDay[k][i],labels);
           }
     labelIndex = 0;
+    promotionList = {{ promotionList|safe }}
 
     for(var i=0; i< attrLatList[k].length ; i++){
 	    var p = i+1;
@@ -116,10 +117,19 @@ function initialize(k) {
         var ul = document.createElement("ul");
         var q=p;
         if(timeofDay[k][0]!=0){q=p-1}
-        ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
+        if(promotionList[k][q]!=''){
+            ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
                    '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][q]+
-                   ' </p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
-        daydetail.appendChild(ul);
+                   '</strong></li><li class="d-flex justify-content-between align-items-center"><a href = '+promotionList[k][q]+
+                   '>Promotion</a></p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
+            daydetail.appendChild(ul);
+        }
+        else{
+            ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
+                   '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][q]+
+                   '</p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
+            daydetail.appendChild(ul);
+        }
     }
 
 
