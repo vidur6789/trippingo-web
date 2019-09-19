@@ -101,7 +101,7 @@ class SetTravellerInfoBasic (forms.Form):
 
 class FlexTravel (forms.Form):
 
-	Travel_Duration = forms.IntegerField(	
+	No_of_Travel_Days = forms.IntegerField(	
 											widget 	= forms.TextInput(
 											attrs 	= {
 											'class'			: 'form-control',

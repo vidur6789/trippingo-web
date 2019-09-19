@@ -106,7 +106,7 @@ def FlexyTravel(request):
 						'' ,
 						True, 
 						BformInput["How_Are_You_Travelling"], 
-						FformInput["Travel_Duration"], 
+						FformInput["No_of_Travel_Days"], 
 						FformInput["Max_Hours_Per_Day"],
 						"LongMeal", 
 						BformInput['Interest'] )
