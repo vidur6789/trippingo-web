@@ -102,6 +102,7 @@ function initialize(k) {
           }
     labelIndex = 0;
     promotionList = {{ promotionList|safe }}
+    moneyList = {{ moneyList|safe }}
 
     for(var i=0; i< attrLatList[k].length ; i++){
 	    var p = i+1;
@@ -121,13 +122,13 @@ function initialize(k) {
             ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
                    '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][q]+
                    '</strong></li><li class="d-flex justify-content-between align-items-center"><a href = '+promotionList[k][q]+
-                   '>Promotion</a></p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
+                   '>&#128176;Click here to save $'+moneyList[k][q]+'  &#128176;</a></p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'>&#128652;Direct to Google Maps &#128652;<a></li>';
             daydetail.appendChild(ul);
         }
         else{
             ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
                    '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][q]+
-                   '</p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
+                   '</p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'>&#128652;Direct to Google Maps &#128652;<a></li>';
             daydetail.appendChild(ul);
         }
     }
