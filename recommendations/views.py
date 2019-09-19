@@ -60,7 +60,11 @@ def itinerary(request,pk):
     for dayp in itinerary["dayPlans"]:
         for j in dayp["attractionVisit"]:
             daytime = time.strptime(j["timeofDay"], "%H:%M:%S")
-            j["timeofDay"] = str(daytime.tm_hour)+":"+str(daytime.tm_min)
+            if daytime.tm_min != 0:
+                j["timeofDay"] = str(daytime.tm_hour)+":"+str(daytime.tm_min)
+            else:
+                j["timeofDay"] = str(daytime.tm_hour) + ":" + "00"
+
 
     plan_url = TRIPPINGO_URL + "/travelPlans/{id}".format(id=pk)
     plan_info = getjson(plan_url)
@@ -100,7 +104,6 @@ def itinerary(request,pk):
                 map_label[i] = map_label[i]+str(q-1)
                 allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
             map_label[i] = map_label[i]+"0"
-            print(map_label[i])
         else:
             allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
             direc_url = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
@@ -112,7 +115,6 @@ def itinerary(request,pk):
             for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
                 map_label[i] = map_label[i]+str(j+1)
                 allName[j] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
-            print(map_label[i])
 
         for j in range(len(allName)):  # for j in numverofAttracttions per day
             if hotel=='' and j == 0:
@@ -206,14 +208,11 @@ def associationRecommendations(req,pk):
                     # print(a)
 
                     if a["name"] not in rec_list and a["name"] not in duplicate_check:
-                        print(a["name"])
                         duplicate_check.append(a["name"])
                         association_recs.append(mapToModel(a))
-                        print(duplicate_check)
                     # break
         else:
             return recommendations, association_recs
-    print('association_recs',association_recs)
     return recommendations, association_recs
 
 
