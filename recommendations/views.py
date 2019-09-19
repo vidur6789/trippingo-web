@@ -94,12 +94,12 @@ def itinerary(request,pk):
             attrLng = [_ for _ in range(len(itinerary['dayPlans'][i]['attractionVisit'])+2)]
             allName[0]=hotel
             allName[len(itinerary['dayPlans'][i]['attractionVisit']) + 1] = hotel
-            map_label[i]="1"
+            map_label[i]="0"
             for j in range(len(itinerary['dayPlans'][i]['attractionVisit'])):
                 q=j+2
-                map_label[i] = map_label[i]+str(q)
+                map_label[i] = map_label[i]+str(q-1)
                 allName[j+1] = itinerary['dayPlans'][i]['attractionVisit'][j]['attraction']['name']
-            map_label[i] = map_label[i]+"1"
+            map_label[i] = map_label[i]+"0"
             print(map_label[i])
         else:
             allName = [0 for _ in range(len(itinerary['dayPlans'][i]['attractionVisit']))]
@@ -144,7 +144,6 @@ def itinerary(request,pk):
         attrLngList[i] = attrLng
         centerGeometry[i] = [lat_sum / len(allName),
                              lng_sum / len(allName)]
-        print(centerGeometry[i])
         timeofDays[i] = timeperDay
         direct[i] = direct_url
 

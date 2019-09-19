@@ -103,12 +103,25 @@ function initialize(k) {
     labelIndex = 0;
 
     for(var i=0; i< attrLatList[k].length ; i++){
+	    var p = i+1;
+        if(timeofDay[k][0]==0 && p==attrLatList[k].length-1){
+            break;
+        }
+        if(timeofDay[k][0]==0 && p==1 ){
+            console.log(p);
+            var ul = document.createElement("ul");
+            ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><h5>HOTEL: </h5></li><li class="d-flex justify-content-between align-items-center"><h5>' +attrList[k][p-1] + '</h5></li>';
+            daydetail.appendChild(ul);
+        }
         var ul = document.createElement("ul");
-        ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +attrList[k][i] +
-                   '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][i]+
-                   ' </p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][i]+'> Direct to Google Maps<a></li>';
+        var q=p;
+        if(timeofDay[k][0]!=0){q=p-1}
+        ul.innerHTML = '<li class="d-flex justify-content-between align-items-center"><strong>' +p+' '+attrList[k][q] +
+                   '</strong></li><li class="d-flex justify-content-between align-items-center"><p>Arrival Time:'+timeofDay[k][q]+
+                   ' </p></li><li class="d-flex justify-content-between align-items-center"><a href = '+direct[k][q]+'> Direct to Google Maps<a></li>';
         daydetail.appendChild(ul);
     }
+
 
 }
 
